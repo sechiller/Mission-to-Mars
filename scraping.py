@@ -125,9 +125,10 @@ def hemispheres(browser):
         }
 
         hemisphere_image_urls.append(image_dict)
-        return hemisphere_image_urls
-        
         browser.back()
+    
+    return hemisphere_image_urls
+        
     
 
 if __name__ == "__main__":
