@@ -3,6 +3,7 @@ from splinter import Browser
 from bs4 import BeautifulSoup as soup
 import pandas as pd
 import datetime as dt
+from sympy import re
 from webdriver_manager.chrome import ChromeDriverManager
 
 
@@ -93,7 +94,7 @@ def mars_facts():
     df.set_index('Description', inplace=True)
 
      # Convert dataframe into HTML format, add bootstrap
-    return df.to_html(classes="table table-striped")
+    return df.to_html(classes="table table-striped table-hover table-bordered")
 
 
 def hemispheres(browser):
@@ -108,29 +109,60 @@ def hemispheres(browser):
     hemi_soup = soup(hemi_html, 'html.parser')
     item_divs = hemi_soup.find_all('div', class_="item")
     item_links = browser.links.find_by_partial_text('Hemisphere Enhanced')
+
+    for i in range(0, len(item_links)):
     
-    for link in item_links:
-        link.click()
-    # browser.links.find_by_partial_text('Hemisphere Enhanced').click()
+        link_to_click = browser.links.find_by_partial_text('Hemisphere Enhanced')[i]
+        link_to_click.click()
+        
         clicked_html = browser.html
         hemi_soup = soup(clicked_html, 'html.parser')
         full_image = hemi_soup.find_all('div', class_='downloads')
         title = hemi_soup.find('h2', class_='title').text
+        
         image_link = hemi_soup.find('a', text="Sample").get("href")
-        full_image_link = f'https://spaceimages-mars.com/{image_link}'
+    
+        full_image_link = f'https://marshemispheres.com/{image_link}'
     
         image_dict = {
             "img_url" : full_image_link,
             "title" : title
         }
-
+    
         hemisphere_image_urls.append(image_dict)
+
         browser.back()
     
-    return hemisphere_image_urls
-        
+    return(hemisphere_image_urls)
+
+    # for link in item_links:
+    #     link.click()
+    #     clicked_html = browser.html
+    #     hemi_soup = soup(clicked_html, 'html.parser')
+
+    #     #full_image = hemi_soup.find_all('div', class_='downloads')
+
+    #     title = hemi_soup.find('h2', class_='title').text
+    #     image_link = hemi_soup.find('a', text="Sample").get("href")
+    #     full_image_link = f'https://spaceimages-mars.com/{image_link}'
     
+    #     image_dict = {
+    #         "img_url" : full_image_link,
+    #         "title" : title
+    #     }
+
+    #     hemisphere_image_urls.append(image_dict)
+    #     browser.back()
+    
+    #return(hemisphere_image_urls)
+
+
 
 if __name__ == "__main__":
     # If running as script, print scraped data
     print(scrape_all())
+
+
+
+    
+    
